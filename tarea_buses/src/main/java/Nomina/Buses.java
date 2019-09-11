@@ -1,4 +1,4 @@
-package com.example.tarea_buses;
+package Nomina;
 
 import lombok.Data;
 
