@@ -23,8 +23,11 @@ class Control_Buses {
 
     private final Buses_Repositorio repository;
 
-    Control_Buses(Buses_Repositorio repository) {
+    private final ResourceJuntadorBuses assembler;
+
+    Control_Buses(Buses_Repositorio repository, ResourceJuntadorBuses assembler) {
         this.repository = repository;
+        this.assembler = assembler;
     }
 
     // Aggregate root
@@ -40,15 +43,17 @@ class Control_Buses {
     }
 
     // Single item
-/*
-   @GetMapping("/buses/{id}")
-    Buses one(@PathVariable Long id) {
 
-        return repository.findById(id)
+    // se cambio one por ones
+
+    @GetMapping("/buses/{id}")
+    Resource<Buses> ones(@PathVariable Long id) {
+
+        Buses employee = repository.findById(id)
                 .orElseThrow(() -> new BusNotFoundException(id));
-    }
-*/
 
+        return assembler.toResource(employee);
+    }
 
 
     @PutMapping("/buses/{id}")
@@ -89,15 +94,11 @@ class Control_Buses {
     Resources<Resource<Buses>> all() {
 
         List<Resource<Buses>> buses = repository.findAll().stream()
-                .map(bus -> new Resource<>(bus,
-                        linkTo(methodOn(Control_Buses.class).one(bus.getId())).withSelfRel(),
-                        linkTo(methodOn(Control_Buses.class).all()).withRel("employees")))
+                .map(assembler::toResource)
                 .collect(Collectors.toList());
 
         return new Resources<>(buses,
                 linkTo(methodOn(Control_Buses.class).all()).withSelfRel());
     }
-
-
 
 }
