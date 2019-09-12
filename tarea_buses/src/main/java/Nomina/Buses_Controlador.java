@@ -32,12 +32,12 @@ class Buses_Controlador {
     }
 
     // Aggregate root
-    /*
+/*
     @GetMapping("/buses")
      List<Buses> all() {
         return repository.findAll();
     }
-    */
+*/
 
     @PostMapping("/buses")
     ResponseEntity<?> newEmployee(@RequestBody Buses newEmployee) throws URISyntaxException {
@@ -76,8 +76,8 @@ class Buses_Controlador {
                 });
     }
 
-
-    @PutMapping("/buses/{id}")
+//////////////////////////buses por busees
+    @PutMapping("/busees/{id}")
     ResponseEntity<?> replaceBus(@RequestBody Buses newBus, @PathVariable Long id) throws URISyntaxException {
 
         Buses updatedEmployee = repository.findById(id)
@@ -105,7 +105,8 @@ class Buses_Controlador {
         repository.deleteById(id);
     }
 
-    @DeleteMapping("/buses/{id}")
+    //////////////// buses por busees
+    @DeleteMapping("/busees/{id}")
     ResponseEntity<?> deleteBuses (@PathVariable Long id) {
 
         repository.deleteById(id);
@@ -115,7 +116,8 @@ class Buses_Controlador {
 
     //mas
 
-    @GetMapping("/buses/{id}")
+    //////////////// buses por busees
+    @GetMapping("/busees/{id}")
     Resource<Buses> one(@PathVariable Long id) {
 
         Buses bus = repository.findById(id)
@@ -123,7 +125,7 @@ class Buses_Controlador {
 
         Resource<Buses> busees = new Resource<>(bus,
                 linkTo(methodOn(Buses_Controlador.class).one(id)).withSelfRel(),
-                linkTo(methodOn(Buses_Controlador.class).all()).withRel("buses"));
+               linkTo(methodOn(Buses_Controlador.class).all()).withRel("buses"));
         return busees;
     }
 
@@ -134,10 +136,10 @@ class Buses_Controlador {
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
 
-        return new Resources<>(buses,
+        Resources<Resource<Buses>> resources = new Resources<>(buses,
                 linkTo(methodOn(Buses_Controlador.class).all()).withSelfRel());
+        return resources;
     }
-
 
 
 }

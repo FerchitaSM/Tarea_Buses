@@ -10,9 +10,8 @@ import javax.persistence.Table;
 
 @Entity
 @Data
-@Table(name = "Consulta del cliente")
-public
-class Orden {
+@Table(name = "CUSTOMER_ORDER")
+public class Orden {
 
     private @Id @GeneratedValue Long id;
 
