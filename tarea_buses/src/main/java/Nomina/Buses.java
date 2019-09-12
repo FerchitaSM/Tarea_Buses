@@ -17,4 +17,19 @@ public class Buses {
         this.name_rute = name_rute;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName_rute() {
+        return name_rute;
+    }
+
+    public void setName_rute(String name_rute) {
+        this.name_rute = name_rute;
+    }
 }
