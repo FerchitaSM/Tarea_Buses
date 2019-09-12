@@ -11,15 +11,10 @@ import javax.persistence.Id;
 public class Buses {
     private @Id @GeneratedValue Long id;
     private String name_rute;
-    private boolean going;
-    private String[] stops;
-
     Buses() {}
 
-    public Buses(String name_rute, boolean going, String[] stops) {
+    public Buses(String name_rute) {
         this.name_rute = name_rute;
-        this.going = going;
-        this.stops = stops;
     }
 
 }
