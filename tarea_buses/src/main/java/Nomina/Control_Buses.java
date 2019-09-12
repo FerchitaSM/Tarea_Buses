@@ -1,10 +1,13 @@
 package Nomina;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,14 +35,19 @@ class Control_Buses {
 
     // Aggregate root
 /*
-    @GetMapping("/employees")
+    @GetMapping("/buses")
     List<Buses> all() {
         return repository.findAll();
     }
 */
-    @PostMapping("/employees")
-    Buses newEmployee(@RequestBody Buses newEmployee) {
-        return repository.save(newEmployee);
+    @PostMapping("/buses")
+    ResponseEntity<?> newEmployee(@RequestBody Buses newEmployee) throws URISyntaxException {
+
+        Resource<Buses> resource = assembler.toResource(repository.save(newEmployee));
+
+        return ResponseEntity
+                .created(new URI(resource.getId().expand().getHref()))
+                .body(resource);
     }
 
     // Single item
@@ -60,10 +68,9 @@ class Control_Buses {
     Buses replaceEmployee(@RequestBody Buses newBus, @PathVariable Long id) {
 
         return repository.findById(id)
-                .map(employee -> {
-                    employee.setId(newBus.getId());
-                    employee.setName_rute(newBus.getName_rute());
-                    return repository.save(employee);
+                .map(bus -> {
+                    bus.setName_rute(newBus.getName_rute());
+                    return repository.save(bus);
                 })
                 .orElseGet(() -> {
                     newBus.setId(id);
@@ -71,9 +78,41 @@ class Control_Buses {
                 });
     }
 
+
+    @PutMapping("/buses/{id}")
+    ResponseEntity<?> replaceBus(@RequestBody Buses newBus, @PathVariable Long id) throws URISyntaxException {
+
+        Buses updatedEmployee = repository.findById(id)
+                .map(bus -> {
+                    bus.setName_rute(newBus.getName_rute());
+                    return repository.save(bus);
+                })
+                .orElseGet(() -> {
+                    newBus.setId(id);
+                    return repository.save(newBus);
+                });
+
+        Resource<Buses> resource = assembler.toResource(updatedEmployee);
+
+        return ResponseEntity
+                .created(new URI(resource.getId().expand().getHref()))
+                .body(resource);
+    }
+
+
+
+
     @DeleteMapping("/buses/{id}")
-    void deleteEmployee(@PathVariable Long id) {
+    void deleteBusess(@PathVariable Long id) {
         repository.deleteById(id);
+    }
+
+    @DeleteMapping("/buses/{id}")
+    ResponseEntity<?> deleteBuses (@PathVariable Long id) {
+
+        repository.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 
     //mas
@@ -100,5 +139,7 @@ class Control_Buses {
         return new Resources<>(buses,
                 linkTo(methodOn(Control_Buses.class).all()).withSelfRel());
     }
+
+
 
 }
