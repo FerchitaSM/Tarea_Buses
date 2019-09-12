@@ -12,14 +12,23 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Slf4j
-class Caegar_BDD {
-    Logger log = LoggerFactory.getLogger (Nomina_Buses.class);
+class Cargar_BDD {
 
+    Logger log = LoggerFactory.getLogger (Nominas.class);
     @Bean
-    CommandLineRunner initDatabase(Buses_Repositorio repository) {
+    CommandLineRunner initDatabase(Buses_Repositorio repositoryBus, Orden_Repositorio repositoryOrden) {
         return args -> {
-           log.info("PPPPPPPPPPPP " + repository.save(new Buses( "IncaLlojeta")));
+            
+           log.info("PPPPPPPPPPPP " + repositoryBus.save(new Buses( "IncaLlojeta")));
+
+            repositoryOrden.save(new Orden("Megacenter", Orden_Status.COMPLETED));
+            repositoryOrden.save(new Orden("Multicine", Orden_Status.IN_PROGRESS));
+
+            repositoryOrden.findAll().forEach(order -> {
+                log.info("PPPPPPPPPP " + order);
+            });
 
         };
+        
     }
 }

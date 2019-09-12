@@ -8,13 +8,13 @@ import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.stereotype.Component;
 
     @Component
-    class ResourceJuntadorBuses implements ResourceAssembler<Buses, Resource<Buses>> {
+    class Buses_Assemble_Resource implements ResourceAssembler<Buses, Resource<Buses>> {
 
         @Override
         public Resource<Buses> toResource(Buses bus) {
 
             return new Resource<>(bus,
-                    linkTo(methodOn(Control_Buses.class).one(bus.getId())).withSelfRel(),
-                    linkTo(methodOn(Control_Buses.class).all()).withRel("buses"));
+                    linkTo(methodOn(Buses_Controlador.class).one(bus.getId())).withSelfRel(),
+                    linkTo(methodOn(Buses_Controlador.class).all()).withRel("buses"));
         }
     }

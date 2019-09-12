@@ -11,16 +11,17 @@ import javax.persistence.Table;
 @Entity
 @Data
 @Table(name = "Consulta del cliente")
+public
 class Orden {
 
     private @Id @GeneratedValue Long id;
 
     private String description;
-    private Status status;
+    private Orden_Status status;
 
     Orden() {}
 
-    Orden(String description, Status status) {
+    public Orden(String description, Orden_Status status) {
 
         this.description = description;
         this.status = status;
@@ -42,11 +43,11 @@ class Orden {
         this.description = description;
     }
 
-    public Status getStatus() {
+    public Orden_Status getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(Orden_Status status) {
         this.status = status;
     }
 }

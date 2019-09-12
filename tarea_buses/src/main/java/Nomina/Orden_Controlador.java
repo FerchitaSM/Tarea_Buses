@@ -15,13 +15,13 @@ import static org.springframework.hateoas.core.DummyInvocationUtils.methodOn;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
-class Controlador_Orden {
+class Orden_Controlador {
 
-    private final OrderRepository orderRepository;
-    private final ResourceJuntadorOrdenes assembler;
+    private final Orden_Repositorio orderRepository;
+    private final Orden_Assembler_Resource assembler;
 
-    Controlador_Orden(OrderRepository orderRepository,
-                      ResourceJuntadorOrdenes assembler) {
+    Orden_Controlador(Orden_Repositorio orderRepository,
+                      Orden_Assembler_Resource assembler) {
 
         this.orderRepository = orderRepository;
         this.assembler = assembler;
@@ -35,7 +35,7 @@ class Controlador_Orden {
                 .collect(Collectors.toList());
 
         return new Resources<>(orders,
-                linkTo(methodOn(Controlador_Orden.class).all()).withSelfRel());
+                linkTo(methodOn(Orden_Controlador.class).all()).withSelfRel());
     }
 
     @GetMapping("/orders/{id}")
@@ -48,11 +48,11 @@ class Controlador_Orden {
     @PostMapping("/orders")
     ResponseEntity<Resource<Orden>> newOrder(@RequestBody Orden orden) {
 
-        orden.setStatus(Status.IN_PROGRESS);
+        orden.setStatus(Orden_Status.IN_PROGRESS);
         Orden newOrder = orderRepository.save(orden);
 
         return ResponseEntity
-                .created(linkTo(methodOn(Controlador_Orden.class).one(newOrder.getId())).toUri())
+                .created(linkTo(methodOn(Orden_Controlador.class).one(newOrder.getId())).toUri())
                 .body(assembler.toResource(newOrder));
     }
 
@@ -62,8 +62,8 @@ class Controlador_Orden {
 
         Orden orden = orderRepository.findById(id).orElseThrow(() -> new OrdenNotFoundException(id));
 
-        if (orden.getStatus() == Status.IN_PROGRESS) {
-            orden.setStatus(Status.CANCELLED);
+        if (orden.getStatus() == Orden_Status.IN_PROGRESS) {
+            orden.setStatus(Orden_Status.CANCELLED);
             return ResponseEntity.ok(assembler.toResource(orderRepository.save(orden)));
         }
 
@@ -78,8 +78,8 @@ class Controlador_Orden {
 
         Orden orden  = orderRepository.findById(id).orElseThrow(() -> new OrdenNotFoundException(id));
 
-        if (orden.getStatus() == Status.IN_PROGRESS) {
-            orden.setStatus(Status.COMPLETED);
+        if (orden.getStatus() == Orden_Status.IN_PROGRESS) {
+            orden.setStatus(Orden_Status.COMPLETED);
             return ResponseEntity.ok(assembler.toResource(orderRepository.save(orden)));
         }
 

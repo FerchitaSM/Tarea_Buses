@@ -16,30 +16,29 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.*;
-
 import static org.springframework.hateoas.core.DummyInvocationUtils.methodOn;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
-class Control_Buses {
+class Buses_Controlador {
 
     private final Buses_Repositorio repository;
 
-    private final ResourceJuntadorBuses assembler;
+    private final Buses_Assemble_Resource assembler;
 
-    Control_Buses(Buses_Repositorio repository, ResourceJuntadorBuses assembler) {
+    Buses_Controlador(Buses_Repositorio repository, Buses_Assemble_Resource assembler) {
         this.repository = repository;
         this.assembler = assembler;
     }
 
     // Aggregate root
-/*
+    /*
     @GetMapping("/buses")
-    List<Buses> all() {
+     List<Buses> all() {
         return repository.findAll();
     }
-*/
+    */
+
     @PostMapping("/buses")
     ResponseEntity<?> newEmployee(@RequestBody Buses newEmployee) throws URISyntaxException {
 
@@ -62,7 +61,6 @@ class Control_Buses {
 
         return assembler.toResource(employee);
     }
-
 
     @PutMapping("/buses/{id}")
     Buses replaceEmployee(@RequestBody Buses newBus, @PathVariable Long id) {
@@ -124,8 +122,8 @@ class Control_Buses {
                 .orElseThrow(() -> new BusNotFoundException(id));
 
         Resource<Buses> busees = new Resource<>(bus,
-                linkTo(methodOn(Control_Buses.class).one(id)).withSelfRel(),
-                linkTo(methodOn(Control_Buses.class).all()).withRel("buses"));
+                linkTo(methodOn(Buses_Controlador.class).one(id)).withSelfRel(),
+                linkTo(methodOn(Buses_Controlador.class).all()).withRel("buses"));
         return busees;
     }
 
@@ -137,7 +135,7 @@ class Control_Buses {
                 .collect(Collectors.toList());
 
         return new Resources<>(buses,
-                linkTo(methodOn(Control_Buses.class).all()).withSelfRel());
+                linkTo(methodOn(Buses_Controlador.class).all()).withSelfRel());
     }
 
 

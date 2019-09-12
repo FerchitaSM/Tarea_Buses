@@ -1,6 +1,6 @@
 package Nomina;
 
-enum Status {
+enum Orden_Status {
         IN_PROGRESS,
         COMPLETED,
         CANCELLED;
